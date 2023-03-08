@@ -51,7 +51,9 @@ export class GameMap {
     }
 
     this.entities.forEach((e) => {
-      this.display.draw(e.x, e.y, e.char, e.fg, e.bg);
+      if (this.tiles[e.y][e.x].visible) {
+        this.display.draw(e.x, e.y, e.char, e.fg, e.bg);
+      }
     });
   }
 
@@ -86,5 +88,15 @@ export class GameMap {
         this.tiles[y][x].seen = true;
       }
     });
+  }
+
+  getBlockingEntityAtLocation(x: number, y: number): Entity | undefined {
+    return this.entities.find(
+      (e) => e.blocksMovement && e.x === x && e.y === y
+    );
+  }
+
+  public get nonPlayerEntities(): Entity[] {
+    return this.entities.filter((e) => e.name !== "Player");
   }
 }
